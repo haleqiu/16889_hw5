@@ -20,10 +20,11 @@ def train(train_dataloader, model, opt, epoch, args, writer):
         labels = labels.to(args.device).to(torch.long)
 
         # ------ TO DO: Forward Pass ------
-        predictions = 
+        predictions = model(point_clouds)
 
         if (args.task == "seg"):
             labels = labels.reshape([-1])
+            predictions = predictions.transpose(1,2)
             predictions = predictions.reshape([-1, args.num_seg_class])
             
         # Compute Loss
@@ -55,7 +56,9 @@ def test(test_dataloader, model, epoch, args, writer):
 
             # ------ TO DO: Make Predictions ------
             with torch.no_grad():
-                pred_labels = 
+                outputs = model(point_clouds)
+                _, pred_labels = torch.max(outputs.data, 1)
+    
             correct_obj += pred_labels.eq(labels.data).cpu().sum().item()
             num_obj += labels.size()[0]
 
@@ -73,8 +76,12 @@ def test(test_dataloader, model, epoch, args, writer):
             labels = labels.to(args.device).to(torch.long)
 
             # ------ TO DO: Make Predictions ------
-            with torch.no_grad():     
-                pred_labels = 
+            with torch.no_grad():
+                labels = labels.reshape([-1])
+                predictions = model(point_clouds)
+                predictions = predictions.transpose(1,2)
+                predictions = predictions.reshape([-1, args.num_seg_class])
+                _, pred_labels = torch.max(predictions.data, 1)
 
             correct_point += pred_labels.eq(labels.data).cpu().sum().item()
             num_point += labels.view([-1,1]).size()[0]
@@ -99,9 +106,9 @@ def main(args):
 
     # ------ TO DO: Initialize Model ------
     if args.task == "cls":
-        model = 
+        model = cls_model(num_classes=3).to(args.device)
     else:
-        model = 
+        model = seg_model(num_seg_classes=args.num_seg_class).to(args.device)
     
     # Load Checkpoint 
     if args.load_checkpoint:
@@ -160,6 +167,7 @@ def create_parser():
 
     # Training hyper-parameters
     parser.add_argument('--num_epochs', type=int, default=250)
+    parser.add_argument('--device', type=str, default="cuda:0")
     parser.add_argument('--batch_size', type=int, default=32, help='The number of images in a batch.')
     parser.add_argument('--num_workers', type=int, default=0, help='The number of threads to use for the DataLoader.')
     parser.add_argument('--lr', type=float, default=0.001, help='The learning rate (default 0.001)')
@@ -180,7 +188,7 @@ def create_parser():
 if __name__ == '__main__':
     parser = create_parser()
     args = parser.parse_args()
-    args.device = torch.device("cuda" if torch.cuda.is_available() else 'cpu')
+    # args.device = torch.device("cuda" if torch.cuda.is_available() else 'cpu')
     args.checkpoint_dir = args.checkpoint_dir+"/"+args.task # checkpoint directory is task specific
 
     main(args)
