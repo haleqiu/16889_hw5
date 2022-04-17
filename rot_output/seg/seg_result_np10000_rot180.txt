@@ -1,0 +1,5 @@
+Namespace(num_seg_class=6, num_points=10000, rot=180, vis_num=0, load_checkpoint='best_model', i=0, test_data='./data/seg/data_test.npy', test_label='./data/seg/label_test.npy', output_dir='./rot_output', device='cuda:1', exp_name='exp')
+test_accuracy: 0.333753 
+
+ gt |![Alt Text](output/cls_0_label_0_nump_10000.gif) | ![Alt Text](output/cls_0_label_0_nump_5000.gif)  |  ![Alt Text](output/cls_0_label_0_nump_1000.gif) | ![Alt Text](output/cls_0_label_0_nump_500.gif) | ![Alt Text](output/cls_0_label_0_nump_100.gif) | ![Alt Text](output/cls_0_label_0_nump_50.gif) 
+ accuracy | 0.983 | 0.980 |  0.978| 0.895 | 0.686

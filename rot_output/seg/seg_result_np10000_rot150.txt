@@ -1,0 +1,2 @@
+Namespace(num_seg_class=6, num_points=10000, rot=150, vis_num=0, load_checkpoint='best_model', i=0, test_data='./data/seg/data_test.npy', test_label='./data/seg/label_test.npy', output_dir='./rot_output', device='cuda:1', exp_name='exp')
+test_accuracy: 0.289278 
