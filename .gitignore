@@ -1,0 +1,6 @@
+checkpoints/*
+checkpointsrelu/*
+output/*
+logs/*
+data/*
+*.pyc

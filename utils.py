@@ -68,9 +68,10 @@ def viz_seg (verts, labels, path, device):
     R, T = pytorch3d.renderer.cameras.look_at_view_transform(dist=dist, elev=elev, azim=azim, device=device)
     c = pytorch3d.renderer.FoVPerspectiveCameras(R=R, T=T, fov=60, device=device)
 
+    n_points = verts.shape[0]
     sample_verts = verts.unsqueeze(0).repeat(30,1,1).to(torch.float)
     sample_labels = labels.unsqueeze(0)
-    sample_colors = torch.zeros((1,10000,3))
+    sample_colors = torch.zeros((1,n_points,3))
 
     # Colorize points based on segmentation labels
     for i in range(6):
@@ -98,7 +99,8 @@ def vis_cls(verts, path, device):
 
     sample_verts = verts.unsqueeze(0).repeat(30,1,1).to(torch.float)
     color = torch.tensor([1.0,0.0,1.0])
-    sample_colors = color.repeat(1,10000,1)
+    n_points = verts.shape[0]
+    sample_colors = color.repeat(1,n_points,1)
     sample_colors = sample_colors.repeat(30,1,1).to(torch.float)
 
     point_cloud = pytorch3d.structures.Pointclouds(points=sample_verts, features=sample_colors).to(device)

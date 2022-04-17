@@ -128,11 +128,10 @@ def main(args):
     print ("successfully loaded data")
 
     best_acc = -1
-
     print ("======== start training for {} task ========".format(args.task))
     print ("(check tensorboard for plots of experiment logs/{})".format(args.task+"_"+args.exp_name))
     
-    for epoch in range(args.num_epochs):
+    for epoch in range(args.start_epochs, args.num_epochs):
 
         # Train
         train_epoch_loss = train(train_dataloader, model, opt, epoch, args, writer)
@@ -167,6 +166,7 @@ def create_parser():
 
     # Training hyper-parameters
     parser.add_argument('--num_epochs', type=int, default=250)
+    parser.add_argument('--start_epochs', type=int, default=0)
     parser.add_argument('--device', type=str, default="cuda:0")
     parser.add_argument('--batch_size', type=int, default=32, help='The number of images in a batch.')
     parser.add_argument('--num_workers', type=int, default=0, help='The number of threads to use for the DataLoader.')
